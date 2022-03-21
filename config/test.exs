@@ -10,6 +10,7 @@ config :weather_tracker, WeatherTracker.Repo,
   password: "postgres",
   hostname: "localhost",
   database: "weather_tracker_test#{System.get_env("MIX_TEST_PARTITION")}",
+  ports: 54320,
   pool: Ecto.Adapters.SQL.Sandbox,
   pool_size: 10
 

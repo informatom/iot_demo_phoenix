@@ -6,6 +6,7 @@ config :weather_tracker, WeatherTracker.Repo,
   password: "postgres",
   hostname: "localhost",
   database: "weather_tracker_dev",
+  port: 54320,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
 
