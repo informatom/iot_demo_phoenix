@@ -11,20 +11,32 @@ defmodule WeatherTrackerWeb.WeatherConditionsController do
   def create(conn, params) do
     IO.inspect(params)
 
-    case WeatherConditions.create_entry(params) do
-      {:ok, weather_condition = %WeatherCondition{}} ->
-        Logger.debug("Successfully created a weather condition entry")
+    token =
+      get_req_header(conn, "authorization")
+      |> List.first()
 
-        conn
-        |> put_status(:created)
-        |> json(weather_condition)
+    if token == "shiqbNfVhL91JZOtqK0896BYJfZbUDrI2ERIzmoc" do
+      case WeatherConditions.create_entry(params) do
+        {:ok, weather_condition = %WeatherCondition{}} ->
+          Logger.debug("Successfully created a weather condition entry")
 
-      error ->
-        Logger.warn("Failed to create a weather entry: #{inspect(error)}")
+          conn
+          |> put_status(:created)
+          |> json(weather_condition)
 
-        conn
-        |> put_status(:unprocessable_entity)
-        |> json(%{message: "Poorly formatted payload"})
+        error ->
+          Logger.warn("Failed to create a weather entry: #{inspect(error)}")
+
+          conn
+          |> put_status(:unprocessable_entity)
+          |> json(%{message: "Poorly formatted payload"})
+      end
+    else
+      Logger.warn("No valid auth token provided")
+
+      conn
+      |> put_status(:unprocessable_entity)
+      |> json(%{message: "Auth token not valid"})
     end
   end
 end
